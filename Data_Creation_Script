@@ -1,0 +1,27 @@
+inputdata <- read.table("household_power_consumption.txt", header=TRUE, sep=";", na.strings = "?", colClasses = c
+
+('character','character','numeric','numeric','numeric','numeric','numeric','numeric','numeric'))
+
+# Format date as per Assignment Steps
+inputdata$Date <- as.Date(inputdata$Date, "%d/%m/%Y")
+  
+## Filter data set from Feb. 1, 2007 to Feb. 2, 2007
+inputdata <- subset(inputdata,Date >= as.Date("2007-2-1") & Date <= as.Date("2007-2-2"))
+  
+## Considering complete cases only
+x <- complete.cases(inputdata)
+inputdata <- inputdata [x,]
+
+## Combine Date and Time columns
+
+dateTime <- paste(inputdata$Date, inputdata$Time)
+dateTime <- setNames(dateTime, "DateandTime")
+  
+## Add consolidated dateTime column
+inputdata <- cbind(dateTime, inputdata)
+  
+## Format dateTime Column
+inputdata$dateTime <- as.POSIXct(dateTime)
+
+## Remove Date Time columns
+inputdata <- inputdata[ ,!(names(inputdata) %in% c("Date","Time"))]
